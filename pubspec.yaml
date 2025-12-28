@@ -37,6 +37,7 @@ dependencies:
   ldk_node: ^0.3.0
   flutter_secure_storage: ^10.0.0
   qr_flutter: ^4.1.0
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:
