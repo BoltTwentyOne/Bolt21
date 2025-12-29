@@ -44,10 +44,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final success = await AuthService.authenticateWithDeviceCredentials(
         reason: 'Authenticate to enable $_biometricType lock',
       );
-      if (!success) return;
+      if (!success) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Authentication failed or cancelled'),
+              backgroundColor: Bolt21Theme.error,
+            ),
+          );
+        }
+        return;
+      }
     }
     await AuthService.setBiometricEnabled(value);
     setState(() => _biometricEnabled = value);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(value
+            ? '$_biometricType lock enabled'
+            : '$_biometricType lock disabled'),
+          backgroundColor: Bolt21Theme.success,
+        ),
+      );
+    }
   }
 
   @override

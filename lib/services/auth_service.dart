@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Service for biometric authentication
@@ -50,9 +51,14 @@ class AuthService {
     try {
       return await _auth.authenticate(
         localizedReason: reason,
-        biometricOnly: true,
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        ),
       );
-    } on PlatformException {
+    } on PlatformException catch (e) {
+      // Log error for debugging
+      print('Auth error: ${e.code} - ${e.message}');
       return false;
     }
   }
@@ -66,9 +72,14 @@ class AuthService {
     try {
       return await _auth.authenticate(
         localizedReason: reason,
-        biometricOnly: false,  // Allow PIN/pattern for this one-time setup
+        options: const AuthenticationOptions(
+          biometricOnly: false,  // Allow PIN/pattern for this one-time setup
+          stickyAuth: true,
+        ),
       );
-    } on PlatformException {
+    } on PlatformException catch (e) {
+      // Log error for debugging
+      print('Auth error: ${e.code} - ${e.message}');
       return false;
     }
   }
