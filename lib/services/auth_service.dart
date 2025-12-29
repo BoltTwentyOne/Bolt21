@@ -47,9 +47,12 @@ class AuthService {
     String reason = 'Authenticate to access Bolt21',
   }) async {
     try {
+      // SECURITY: biometricOnly: true prevents PIN/pattern fallback
+      // For a Bitcoin wallet, physical biometric is required - device PIN
+      // can be shoulder-surfed or obtained through social engineering
       return await _auth.authenticate(
         localizedReason: reason,
-        biometricOnly: false, // Allow PIN/pattern as fallback
+        biometricOnly: true,
       );
     } on PlatformException {
       return false;
