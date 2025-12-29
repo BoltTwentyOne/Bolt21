@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'secure_storage_service.dart';
+import '../utils/secure_logger.dart';
 
 /// Types of wallet operations that can be tracked
 enum OperationType {
@@ -127,15 +129,18 @@ class OperationState {
 }
 
 /// Service for persisting operation state to survive app crashes
-/// Uses AES-like XOR encryption with secure random key stored in keychain
+/// Uses AES-256-GCM encryption with secure random key stored in keychain
 class OperationStateService {
   static const String _fileName = 'operation_state.enc';
   static const String _encryptionKeyStorageKey = 'op_state_encryption_key';
   File? _stateFile;
   List<OperationState> _operations = [];
-  Uint8List? _encryptionKey;
+  SecretKey? _secretKey;
 
-  // Secure random generator for operation IDs and encryption
+  // AES-256-GCM cipher for authenticated encryption
+  final AesGcm _cipher = AesGcm.with256bits();
+
+  // Secure random generator for operation IDs
   final Random _secureRandom = Random.secure();
 
   /// Initialize the service and load existing state
@@ -155,17 +160,17 @@ class OperationStateService {
   Future<void> _initializeEncryptionKey() async {
     final existingKey = await SecureStorageService.read(_encryptionKeyStorageKey);
     if (existingKey != null && existingKey.isNotEmpty) {
-      _encryptionKey = base64Decode(existingKey);
+      final keyBytes = base64Decode(existingKey);
+      _secretKey = SecretKey(keyBytes);
     } else {
-      // Generate new 32-byte (256-bit) key using secure random
-      _encryptionKey = Uint8List.fromList(
-        List.generate(32, (_) => _secureRandom.nextInt(256)),
-      );
+      // Generate new 256-bit key using cryptographically secure random
+      _secretKey = await _cipher.newSecretKey();
+      final keyBytes = await _secretKey!.extractBytes();
       await SecureStorageService.write(
         _encryptionKeyStorageKey,
-        base64Encode(_encryptionKey!),
+        base64Encode(keyBytes),
       );
-      debugPrint('Generated new operation state encryption key');
+      SecureLogger.info('Generated new AES-256-GCM encryption key', tag: 'OpState');
     }
   }
 
@@ -201,7 +206,7 @@ class OperationStateService {
     _operations.add(operation);
     await _saveState();
 
-    debugPrint('Operation created: ${operation.id} (${type.name})');
+    SecureLogger.operation(operation.id, 'created', details: type.name);
     return operation;
   }
 
@@ -225,7 +230,7 @@ class OperationStateService {
         txId: txId,
       );
       await _saveState();
-      debugPrint('Operation completed: $operationId');
+      SecureLogger.operation(operationId, 'completed');
     }
   }
 
@@ -239,7 +244,7 @@ class OperationStateService {
         error: error,
       );
       await _saveState();
-      debugPrint('Operation failed: $operationId - $error');
+      SecureLogger.operation(operationId, 'failed');
     }
   }
 
@@ -299,22 +304,22 @@ class OperationStateService {
     if (index != -1) {
       _operations[index] = _operations[index].copyWith(status: status);
       await _saveState();
-      debugPrint('Operation $operationId -> ${status.name}');
+      SecureLogger.operation(operationId, status.name);
     }
   }
 
   Future<void> _loadState() async {
     try {
-      final encryptedBytes = await _stateFile!.readAsBytes();
-      final decrypted = _decrypt(encryptedBytes);
+      final fileBytes = await _stateFile!.readAsBytes();
+      final decrypted = await _decryptAesGcm(fileBytes);
       final content = utf8.decode(decrypted);
       final List<dynamic> jsonList = json.decode(content);
       _operations = jsonList
           .map((e) => OperationState.fromJson(e as Map<String, dynamic>))
           .toList();
-      debugPrint('Loaded ${_operations.length} operations from disk (encrypted)');
+      SecureLogger.info('Loaded ${_operations.length} operations (AES-256-GCM)', tag: 'OpState');
     } catch (e) {
-      debugPrint('Failed to load operation state: $e');
+      SecureLogger.error('Failed to load operation state', error: e, tag: 'OpState');
       _operations = [];
       // If decryption fails (corrupted or wrong key), delete the file
       try {
@@ -324,54 +329,56 @@ class OperationStateService {
   }
 
   Future<void> _saveState() async {
-    if (_stateFile == null || _encryptionKey == null) return;
+    if (_stateFile == null || _secretKey == null) return;
 
     try {
       final jsonList = _operations.map((op) => op.toJson()).toList();
       final plaintext = utf8.encode(json.encode(jsonList));
-      final encrypted = _encrypt(Uint8List.fromList(plaintext));
+      final encrypted = await _encryptAesGcm(plaintext);
       await _stateFile!.writeAsBytes(encrypted);
     } catch (e) {
-      debugPrint('Failed to save operation state: $e');
+      SecureLogger.error('Failed to save operation state', error: e, tag: 'OpState');
     }
   }
 
-  /// Simple XOR-based encryption with random IV
-  /// Not as secure as AES, but provides basic obfuscation without additional deps
-  Uint8List _encrypt(Uint8List plaintext) {
-    // Generate random 16-byte IV
-    final iv = Uint8List.fromList(
-      List.generate(16, (_) => _secureRandom.nextInt(256)),
+  /// Encrypt data using AES-256-GCM (authenticated encryption)
+  /// Format: [12-byte nonce][ciphertext][16-byte auth tag]
+  Future<List<int>> _encryptAesGcm(List<int> plaintext) async {
+    // Generate random 96-bit nonce (recommended for GCM)
+    final nonce = List.generate(12, (_) => _secureRandom.nextInt(256));
+
+    final secretBox = await _cipher.encrypt(
+      plaintext,
+      secretKey: _secretKey!,
+      nonce: nonce,
     );
 
-    // XOR plaintext with key (repeating key if needed)
-    final encrypted = Uint8List(plaintext.length);
-    for (var i = 0; i < plaintext.length; i++) {
-      final keyByte = _encryptionKey![(i + iv[i % 16]) % _encryptionKey!.length];
-      encrypted[i] = plaintext[i] ^ keyByte ^ iv[i % 16];
-    }
-
-    // Prepend IV to encrypted data
-    return Uint8List.fromList([...iv, ...encrypted]);
+    // Combine nonce + ciphertext + mac for storage
+    return [...secretBox.nonce, ...secretBox.cipherText, ...secretBox.mac.bytes];
   }
 
-  /// Decrypt XOR-encrypted data
-  Uint8List _decrypt(Uint8List ciphertext) {
-    if (ciphertext.length < 17) {
-      throw Exception('Invalid encrypted data');
+  /// Decrypt AES-256-GCM encrypted data
+  /// Throws if authentication fails (tampered data)
+  Future<List<int>> _decryptAesGcm(List<int> ciphertext) async {
+    if (ciphertext.length < 12 + 16) {
+      throw Exception('Invalid encrypted data: too short');
     }
 
-    // Extract IV (first 16 bytes)
-    final iv = ciphertext.sublist(0, 16);
-    final encrypted = ciphertext.sublist(16);
+    // Extract components: [12-byte nonce][ciphertext][16-byte mac]
+    final nonce = ciphertext.sublist(0, 12);
+    final mac = Mac(ciphertext.sublist(ciphertext.length - 16));
+    final encryptedData = ciphertext.sublist(12, ciphertext.length - 16);
 
-    // XOR to decrypt
-    final decrypted = Uint8List(encrypted.length);
-    for (var i = 0; i < encrypted.length; i++) {
-      final keyByte = _encryptionKey![(i + iv[i % 16]) % _encryptionKey!.length];
-      decrypted[i] = encrypted[i] ^ keyByte ^ iv[i % 16];
-    }
+    final secretBox = SecretBox(
+      encryptedData,
+      nonce: nonce,
+      mac: mac,
+    );
 
-    return decrypted;
+    // Decrypt and verify authentication tag
+    return await _cipher.decrypt(
+      secretBox,
+      secretKey: _secretKey!,
+    );
   }
 }

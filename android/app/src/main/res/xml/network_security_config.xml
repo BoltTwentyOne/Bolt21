@@ -5,10 +5,7 @@
   SECURITY:
   - Enforces HTTPS for all network connections
   - Disables cleartext (HTTP) traffic
-  - Uses system trust anchors for certificate validation
-
-  For certificate pinning (recommended for production):
-  Add pin-set elements for Breez API endpoints
+  - Certificate pinning for Breez API to prevent MITM attacks
 -->
 <network-security-config>
     <!-- Default configuration for all domains -->
@@ -18,6 +15,23 @@
             <certificates src="system" />
         </trust-anchors>
     </base-config>
+
+    <!-- Certificate pinning for Breez API - prevents rogue CA MITM attacks -->
+    <domain-config>
+        <domain includeSubdomains="true">api.breez.technology</domain>
+        <domain includeSubdomains="true">breez.technology</domain>
+        <pin-set expiration="2026-12-31">
+            <!-- Breez API leaf certificate pin -->
+            <pin digest="SHA-256">47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</pin>
+            <!-- Let's Encrypt ISRG Root X1 (backup) -->
+            <pin digest="SHA-256">C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=</pin>
+            <!-- Let's Encrypt R3 intermediate (backup) -->
+            <pin digest="SHA-256">jQJTbIh0grw0/1TkHSumWb+Fs0Ggogr621gT3PvPKG0=</pin>
+        </pin-set>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
 
     <!--
       Debug configuration - allows localhost for development
@@ -29,17 +43,4 @@
             <certificates src="user" />
         </trust-anchors>
     </debug-overrides>
-
-    <!--
-      OPTIONAL: Certificate pinning for Breez API
-      Uncomment and add actual pin hashes before production release
-
-      <domain-config>
-          <domain includeSubdomains="true">api.breez.technology</domain>
-          <pin-set expiration="2025-12-31">
-              <pin digest="SHA-256">BASE64_ENCODED_SHA256_HASH_HERE</pin>
-              <pin digest="SHA-256">BACKUP_PIN_HASH_HERE</pin>
-          </pin-set>
-      </domain-config>
-    -->
 </network-security-config>

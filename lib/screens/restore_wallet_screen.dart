@@ -25,13 +25,22 @@ class _RestoreWalletScreenState extends State<RestoreWalletScreen> {
 
   @override
   void dispose() {
+    // SECURITY: Clear mnemonic words from text controllers before disposal
     for (final controller in _controllers) {
+      controller.clear();
       controller.dispose();
     }
     for (final node in _focusNodes) {
       node.dispose();
     }
     super.dispose();
+  }
+
+  /// SECURITY: Clear all mnemonic input fields
+  void _clearMnemonicFields() {
+    for (final controller in _controllers) {
+      controller.clear();
+    }
   }
 
   String get _mnemonic {
@@ -80,6 +89,9 @@ class _RestoreWalletScreenState extends State<RestoreWalletScreen> {
 
       _updateSyncStatus('Saving recovery phrase...', 2);
       await SecureStorageService.saveMnemonic(mnemonic);
+
+      // SECURITY: Clear mnemonic from UI after secure storage
+      _clearMnemonicFields();
 
       _updateSyncStatus('Connecting to Lightning network...', 3);
       final wallet = context.read<WalletProvider>();

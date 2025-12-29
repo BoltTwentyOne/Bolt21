@@ -26,6 +26,15 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
     _generateMnemonic();
   }
 
+  @override
+  void dispose() {
+    // SECURITY: Clear mnemonic from memory when leaving screen
+    // Note: Dart strings are immutable and can't be truly wiped,
+    // but clearing the reference helps minimize exposure window
+    _mnemonic = null;
+    super.dispose();
+  }
+
   void _generateMnemonic() {
     final wallet = context.read<WalletProvider>();
     final mnemonic = wallet.generateMnemonic();
@@ -40,13 +49,21 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
 
     setState(() => _isLoading = true);
 
+    // SECURITY: Copy mnemonic to local variable and clear class field ASAP
+    final mnemonicCopy = _mnemonic!;
+
     try {
       // Save mnemonic securely
-      await SecureStorageService.saveMnemonic(_mnemonic!);
+      await SecureStorageService.saveMnemonic(mnemonicCopy);
 
       // Initialize wallet
       final wallet = context.read<WalletProvider>();
-      await wallet.initializeWallet(mnemonic: _mnemonic);
+      await wallet.initializeWallet(mnemonic: mnemonicCopy);
+
+      // SECURITY: Clear mnemonic from UI state after successful storage
+      if (mounted) {
+        setState(() => _mnemonic = null);
+      }
 
       // Check if initialization succeeded
       if (wallet.error != null) {

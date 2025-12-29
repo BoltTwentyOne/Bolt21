@@ -1,6 +1,6 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_breez_liquid/flutter_breez_liquid.dart';
+import 'package:synchronized/synchronized.dart';
 import '../services/lightning_service.dart';
 import '../services/operation_state_service.dart';
 import '../utils/retry_helper.dart';
@@ -10,8 +10,8 @@ class WalletProvider extends ChangeNotifier {
   final LightningService _lightningService = LightningService();
   final OperationStateService _operationStateService = OperationStateService();
 
-  // Mutex lock to prevent concurrent payment operations
-  Completer<void>? _sendLock;
+  // Atomic mutex lock to prevent concurrent payment operations (TOCTOU-safe)
+  final Lock _sendLock = Lock();
 
   // State
   bool _isLoading = false;
@@ -236,25 +236,24 @@ class WalletProvider extends ChangeNotifier {
     }
   }
 
-  /// Send payment with idempotency and mutex lock - prevents double-spend
+  /// Send payment with idempotency and atomic mutex lock - prevents double-spend
+  /// Uses synchronized Lock for TOCTOU-safe concurrency control
   Future<String?> sendPaymentIdempotent(
     String destination, {
     BigInt? amountSat,
     String? idempotencyKey,
   }) async {
-    // Mutex lock - prevent concurrent payment attempts (race condition fix)
-    if (_sendLock != null && !_sendLock!.isCompleted) {
+    // Check if lock is already held (non-blocking check for UX)
+    if (_sendLock.locked) {
       debugPrint('Payment blocked - another payment is in progress');
       _error = 'Another payment is in progress. Please wait.';
       notifyListeners();
       return null;
     }
 
-    // Acquire lock
-    _sendLock = Completer<void>();
-
-    try {
-      // Check if there's already a pending/executing operation for this destination
+    // Atomic lock acquisition - prevents race condition
+    return await _sendLock.synchronized(() async {
+      // Double-check inside lock (belt and suspenders)
       final existing = _operationStateService.getAllOperations().where((op) =>
           op.destination == destination &&
           op.amountSat == amountSat?.toInt() &&
@@ -268,10 +267,7 @@ class WalletProvider extends ChangeNotifier {
       }
 
       return await sendPayment(destination, amountSat: amountSat);
-    } finally {
-      // Release lock
-      _sendLock?.complete();
-    }
+    });
   }
 
   void _setLoading(bool loading) {
