@@ -1,6 +1,6 @@
 {
-  "minVersion": "0.1.0",
-  "latestVersion": "0.1.0",
-  "message": "A critical update is available. Please update Bolt21 to continue using the app safely.",
-  "storeUrl": "https://github.com/CaliforniaHodl/Bolt21/releases"
+  "minVersion": "1.0.0",
+  "latestVersion": "1.0.0",
+  "message": "A new version of Bolt21 is available with important improvements.",
+  "storeUrl": "https://github.com/CaliforniaHodl/Bolt21/releases/latest"
 }
