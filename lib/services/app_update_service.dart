@@ -4,14 +4,19 @@ import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/secure_logger.dart';
+import 'secure_storage_service.dart';
 
 /// Service to check for required app updates
 ///
 /// Fetches version info from GitHub and shows blocking dialog if update required.
+/// Also checks GitHub releases for optional updates with dismissible prompts.
 /// Update the version.json file in the repo to trigger forced updates.
 class AppUpdateService {
   static const String _versionUrl =
     'https://raw.githubusercontent.com/CaliforniaHodl/Bolt21/main/version.json';
+  static const String _releasesUrl =
+    'https://api.github.com/repos/CaliforniaHodl/Bolt21/releases/latest';
+  static const String _dismissedVersionKey = 'bolt21_dismissed_update_version';
 
   /// Check if app update is required and show blocking dialog if so
   static Future<void> checkForUpdate(BuildContext context) async {
@@ -113,6 +118,83 @@ class AppUpdateService {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
+  }
+
+  /// Check GitHub releases for optional updates (non-blocking)
+  static Future<void> checkForOptionalUpdate(BuildContext context) async {
+    try {
+      final response = await http.get(
+        Uri.parse(_releasesUrl),
+        headers: {'Accept': 'application/vnd.github.v3+json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode != 200) {
+        return;
+      }
+
+      final release = jsonDecode(response.body);
+      final tagName = release['tag_name'] as String?;
+      if (tagName == null) return;
+
+      // Parse version from tag (e.g., "v1.0.1" -> "1.0.1")
+      final latestVersion = tagName.replaceFirst(RegExp(r'^v'), '');
+      final packageInfo = await PackageInfo.fromPlatform();
+      final currentVersion = packageInfo.version;
+
+      // Check if we've already dismissed this version
+      final dismissedVersion = await SecureStorageService.read(_dismissedVersionKey);
+      if (dismissedVersion == latestVersion) {
+        return;
+      }
+
+      if (_isVersionLower(currentVersion, latestVersion)) {
+        SecureLogger.info(
+          'Optional update available: $currentVersion -> $latestVersion',
+          tag: 'Update',
+        );
+
+        if (context.mounted) {
+          _showUpdateSnackbar(
+            context,
+            latestVersion,
+            release['html_url'] as String?,
+          );
+        }
+      }
+    } catch (e) {
+      SecureLogger.warn('Optional update check error: $e', tag: 'Update');
+    }
+  }
+
+  /// Show non-blocking update snackbar
+  static void _showUpdateSnackbar(
+    BuildContext context,
+    String version,
+    String? releaseUrl,
+  ) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Update available: v$version'),
+        backgroundColor: Colors.orange.shade800,
+        duration: const Duration(seconds: 10),
+        action: SnackBarAction(
+          label: 'UPDATE',
+          textColor: Colors.white,
+          onPressed: () async {
+            final url = releaseUrl ?? 'https://github.com/CaliforniaHodl/Bolt21/releases/latest';
+            final uri = Uri.parse(url);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Dismiss update prompt for a specific version
+  static Future<void> dismissUpdate(String version) async {
+    await SecureStorageService.write(_dismissedVersionKey, version);
   }
 }
 

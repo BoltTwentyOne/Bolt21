@@ -193,7 +193,12 @@ class _BalanceCardState extends State<_BalanceCard> {
     // Delay slightly to ensure context is ready
     await Future.delayed(const Duration(milliseconds: 500));
     if (mounted) {
+      // Check for forced updates first (blocking)
       await AppUpdateService.checkForUpdate(context);
+      // Then check for optional updates (non-blocking snackbar)
+      if (mounted) {
+        await AppUpdateService.checkForOptionalUpdate(context);
+      }
     }
   }
 
