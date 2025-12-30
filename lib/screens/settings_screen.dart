@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_breez_liquid/flutter_breez_liquid.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/wallet_provider.dart';
 import '../services/auth_service.dart';
 import '../services/lnd_service.dart';
@@ -254,11 +255,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         const SizedBox(height: 16),
         const Text(
-          'Built with Flutter and LDK.',
+          'Built with Flutter and Breez SDK.',
           style: TextStyle(color: Bolt21Theme.textSecondary),
+        ),
+        const SizedBox(height: 16),
+        GestureDetector(
+          onTap: () => _launchEmail('support@bolt21.io'),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.email, size: 16, color: Bolt21Theme.orange),
+              SizedBox(width: 8),
+              Text(
+                'support@bolt21.io',
+                style: TextStyle(
+                  color: Bolt21Theme.orange,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
+  }
+
+  Future<void> _launchEmail(String email) async {
+    final uri = Uri(scheme: 'mailto', path: email);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    }
   }
 
   void _showConnectNode(BuildContext context) {
