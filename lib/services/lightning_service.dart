@@ -244,4 +244,32 @@ class LightningService {
       throw Exception('Breez SDK not initialized');
     }
   }
+
+  /// List refundable swaps (stuck funds)
+  Future<List<RefundableSwap>> listRefundables() async {
+    _ensureInitialized();
+    return await _sdk!.listRefundables();
+  }
+
+  /// Get recommended on-chain fees
+  Future<RecommendedFees> getRecommendedFees() async {
+    _ensureInitialized();
+    return await _sdk!.recommendedFees();
+  }
+
+  /// Refund a stuck swap
+  Future<RefundResponse> refundSwap({
+    required String swapAddress,
+    required String refundAddress,
+    required int feeRateSatPerVbyte,
+  }) async {
+    _ensureInitialized();
+    return await _sdk!.refund(
+      req: RefundRequest(
+        swapAddress: swapAddress,
+        refundAddress: refundAddress,
+        feeRateSatPerVbyte: feeRateSatPerVbyte,
+      ),
+    );
+  }
 }

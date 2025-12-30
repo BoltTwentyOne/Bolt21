@@ -11,9 +11,10 @@ class CommunityNodeService {
   static const _communityNodeUrlKey = 'bolt21_community_node_url';
   static const _communityNodeEnabledKey = 'bolt21_community_node_enabled';
 
-  // Default community node (can be overridden by user)
-  // This should be your Tailscale IP or public endpoint
-  static const String defaultNodeUrl = 'http://100.88.215.48:8081';
+  // Default community node URL
+  // Set up community.bolt21.io to point to your node's proxy
+  // Users can override this in settings
+  static const String defaultNodeUrl = 'https://community.bolt21.io';
 
   String? _nodeUrl;
   bool _isEnabled = false;
