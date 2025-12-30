@@ -49,6 +49,7 @@ android/build/
 assets/config.json
 *.env
 .env.*
+!.env.example
 secrets/
 
 # Security reports
