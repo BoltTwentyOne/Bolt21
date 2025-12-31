@@ -30,3 +30,9 @@
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
+# Ignore missing Play Core classes (not used in this app)
+-dontwarn com.google.android.play.core.**
+
+# Flutter deferred components (not used)
+-dontwarn io.flutter.embedding.engine.deferredcomponents.**
