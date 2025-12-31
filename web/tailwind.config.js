@@ -33,7 +33,7 @@ module.exports = {
     extend: {
       // Bootstrap color names mapped to values
       colors: {
-        'primary': '#0d6efd',
+        'primary': '#F7931A',
         'secondary': '#6c757d',
         'success': '#198754',
         'danger': '#dc3545',
