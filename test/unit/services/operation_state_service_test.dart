@@ -588,14 +588,8 @@ void main() {
         final op = await service.createOperation(type: OperationType.send, walletId: testWalletId);
         await service.markCompleted(op.id);
 
-        // Manually set completedAt to old date
-        final operations = service.getAllOperations();
-        final oldOp = operations.first.copyWith(
-          completedAt: DateTime.now().subtract(const Duration(days: 30)),
-        );
-
-        // This test would need internal access to work properly
-        // For now, just verify the method doesn't throw
+        // Note: Full cleanup test would require internal access to modify completedAt
+        // For now, verify the method doesn't throw
         await service.cleanupOldOperations(maxAge: const Duration(days: 7));
       });
 

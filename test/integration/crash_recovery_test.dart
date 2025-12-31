@@ -188,13 +188,13 @@ void main() {
         );
         await service.markPreparing(op2.id);
 
-        final op3 = await service.createOperation(
+        // Create third operation that stays pending (unused variable intentional)
+        await service.createOperation(
           type: OperationType.send,
           walletId: testWalletId,
           destination: 'dest3',
           amountSat: 3000,
         );
-        // op3 stays pending
 
         // App restart
         final recoveredService = OperationStateService();
@@ -304,8 +304,8 @@ void main() {
         await service2.initialize();
         expect(service2.getAllOperations().length, equals(2));
 
-        // Add more operations
-        final op3 = await service2.createOperation(type: OperationType.receiveBolt12, walletId: testWalletId);
+        // Add more operations (unused variable intentional - testing persistence)
+        await service2.createOperation(type: OperationType.receiveBolt12, walletId: testWalletId);
 
         // Crash 2
         final service3 = OperationStateService();

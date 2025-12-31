@@ -174,7 +174,6 @@ class _BalanceCard extends StatefulWidget {
 
 class _BalanceCardState extends State<_BalanceCard> {
   BalanceDisplayMode _displayMode = BalanceDisplayMode.sats;
-  bool _priceLoaded = false;
 
   @override
   void initState() {
@@ -186,7 +185,7 @@ class _BalanceCardState extends State<_BalanceCard> {
   Future<void> _loadPrice() async {
     await PriceService.instance.fetchBtcPrice();
     if (mounted) {
-      setState(() => _priceLoaded = true);
+      setState(() {});
     }
   }
 
@@ -610,8 +609,6 @@ class _TransactionList extends StatelessWidget {
       case PaymentDetails_Bitcoin():
         methodStr = 'On-chain';
         break;
-      default:
-        methodStr = 'Unknown';
     }
 
     showModalBottomSheet(
