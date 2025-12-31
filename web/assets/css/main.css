@@ -494,7 +494,7 @@
   }
   .btn-primary {
     background-color: #F7931A;
-    color: white;
+    color: #1a1a1a;
     border: 1px solid #F7931A;
   }
   .btn-primary:hover:not(:disabled) {

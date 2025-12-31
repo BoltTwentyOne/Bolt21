@@ -111,7 +111,7 @@
 
   .btn-primary {
     @include btn-base;
-    @include btn-variant($primary);
+    @include btn-variant($primary, #1a1a1a);
   }
 
   .btn-secondary {

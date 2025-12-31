@@ -163,6 +163,7 @@ class _SendScreenState extends State<SendScreen> {
         actions: [
           IconButton(
             icon: Icon(_isScanning ? Icons.edit : Icons.qr_code_scanner),
+            tooltip: _isScanning ? 'Enter manually' : 'Scan QR code',
             onPressed: () {
               setState(() {
                 _isScanning = !_isScanning;

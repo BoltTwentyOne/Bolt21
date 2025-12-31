@@ -713,6 +713,7 @@ class _InfoRow extends StatelessWidget {
             if (copyable)
               IconButton(
                 icon: const Icon(Icons.copy, size: 18),
+                tooltip: 'Copy to clipboard',
                 onPressed: () async {
                   // SECURITY: Use SecureClipboard with auto-clear for node config data
                   await SecureClipboard.copyWithTimeout(

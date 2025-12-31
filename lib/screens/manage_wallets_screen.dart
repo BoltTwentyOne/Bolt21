@@ -209,6 +209,7 @@ class _WalletCard extends StatelessWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.more_vert),
+                    tooltip: 'Wallet options',
                     onPressed: () => _showWalletActions(context),
                     color: Bolt21Theme.textSecondary,
                   ),
