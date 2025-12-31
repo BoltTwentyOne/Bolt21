@@ -4,12 +4,9 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import '../providers/wallet_provider.dart';
 import '../services/auth_service.dart';
+import '../services/payment_tracker_service.dart';
 import '../utils/address_validator.dart';
 import '../utils/theme.dart';
-
-/// Threshold in sats above which biometric re-authentication is required
-/// SECURITY: Prevents instant fund drain if phone is stolen while unlocked
-const int _paymentReauthThresholdSats = 100000; // 100k sats (~$100 at current rates)
 
 class SendScreen extends StatefulWidget {
   const SendScreen({super.key});
@@ -81,19 +78,23 @@ class _SendScreenState extends State<SendScreen> {
     }
 
     // SECURITY: Require biometric re-authentication for large payments
-    // This prevents instant fund drain if phone is stolen while unlocked
+    // Uses cumulative tracking to prevent bypass via split payments
+    // (e.g., 10 x 99k sats in 5 min window would still require biometric)
     final paymentAmount = amountSat?.toInt() ?? 0;
-    if (paymentAmount >= _paymentReauthThresholdSats) {
+    final paymentTracker = PaymentTrackerService();
+    if (paymentTracker.shouldRequireBiometric(paymentAmount)) {
       final canUseBiometrics = await AuthService.canUseBiometrics();
       if (canUseBiometrics) {
+        final cumulativeAmount = paymentTracker.getCumulativeAmount();
+        final totalAmount = cumulativeAmount + paymentAmount;
         final authenticated = await AuthService.authenticate(
-          reason: 'Authenticate to send ${paymentAmount.toString()} sats',
+          reason: 'Authenticate to send $paymentAmount sats (${totalAmount >= PaymentTrackerService.biometricThresholdSats ? "cumulative: ${totalAmount}" : "large payment"})',
         );
         if (!authenticated) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Authentication required for large payments'),
+                content: Text('Authentication required for large or cumulative payments'),
                 backgroundColor: Bolt21Theme.error,
               ),
             );
@@ -138,6 +139,9 @@ class _SendScreenState extends State<SendScreen> {
     }
 
     if (operationId != null && mounted) {
+      // SECURITY: Record successful payment for cumulative tracking
+      paymentTracker.recordPayment(paymentAmount);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(successMessage),

@@ -35,6 +35,44 @@
         </trust-anchors>
     </domain-config>
 
+    <!-- Certificate pinning for Community Node (Let's Encrypt) -->
+    <domain-config>
+        <domain includeSubdomains="true">community.bolt21.io</domain>
+        <pin-set expiration="2026-12-31">
+            <!-- ISRG Root X1 (Let's Encrypt root) -->
+            <pin digest="SHA-256">C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=</pin>
+            <!-- ISRG Root X2 (backup root) -->
+            <pin digest="SHA-256">diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=</pin>
+            <!-- Let's Encrypt E1 intermediate -->
+            <pin digest="SHA-256">J2/oqMTsdhFWW/n85tys6b4yDBtb6idZayIEBx7QTxA=</pin>
+            <!-- Let's Encrypt R3 intermediate -->
+            <pin digest="SHA-256">jQJTbIh0grw0/1TkHSumWb+Fs0Ggogr621gT3PvPKG0=</pin>
+        </pin-set>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Certificate pinning for GitHub (app updates) - DigiCert CA chain -->
+    <domain-config>
+        <domain includeSubdomains="true">raw.githubusercontent.com</domain>
+        <domain includeSubdomains="true">api.github.com</domain>
+        <domain includeSubdomains="true">github.com</domain>
+        <pin-set expiration="2026-12-31">
+            <!-- DigiCert Global Root CA -->
+            <pin digest="SHA-256">r/mIkJVsUSitA1b1FtRGF+vJlczCzKPct4TGaFOCmJk=</pin>
+            <!-- DigiCert Global Root G2 -->
+            <pin digest="SHA-256">i7WTqTvh0OioIruIfFR4kMPnBqrS2rdiVPl/s2uC/CY=</pin>
+            <!-- DigiCert High Assurance EV Root CA -->
+            <pin digest="SHA-256">WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=</pin>
+            <!-- DigiCert TLS RSA SHA256 2020 CA1 -->
+            <pin digest="SHA-256">RQeZkB42znUfsDIIFWIRiYEcKl7nHwNFwWCrnMMJhPw=</pin>
+        </pin-set>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
     <!-- Debug: allow user certs for proxy debugging -->
     <debug-overrides>
         <trust-anchors>

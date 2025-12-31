@@ -261,30 +261,45 @@ class _BalanceCardState extends State<_BalanceCard> {
     return breezBalance + lndBalance;
   }
 
+  String _getAccessibilityLabel() {
+    final balance = _unifiedBalance;
+    final hasLnd = widget.wallet.isLndConnected;
+    final balanceType = hasLnd ? 'Unified balance' : 'Total balance';
+
+    if (_displayMode == BalanceDisplayMode.hidden) {
+      return '$balanceType is hidden. Tap to show balance.';
+    }
+
+    return '$balanceType: ${formatSats(balance)}. $_displayModeLabel';
+  }
+
   @override
   Widget build(BuildContext context) {
     final hasLnd = widget.wallet.isLndConnected;
 
-    return Card(
-      child: InkWell(
-        onTap: _cycleDisplayMode,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              Text(
-                hasLnd ? 'Unified Balance' : 'Total Balance',
-                style: const TextStyle(color: Bolt21Theme.textSecondary),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                _formatBalance(_unifiedBalance),
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Bolt21Theme.orange,
+    return Semantics(
+      label: _getAccessibilityLabel(),
+      button: true,
+      child: Card(
+        child: InkWell(
+          onTap: _cycleDisplayMode,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                Text(
+                  hasLnd ? 'Unified Balance' : 'Total Balance',
+                  style: const TextStyle(color: Bolt21Theme.textSecondary),
                 ),
-              ),
+                const SizedBox(height: 8),
+                Text(
+                  _formatBalance(_unifiedBalance),
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Bolt21Theme.orange,
+                  ),
+                ),
               const SizedBox(height: 4),
               Text(
                 _displayModeLabel,
@@ -351,6 +366,7 @@ class _BalanceCardState extends State<_BalanceCard> {
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -495,41 +511,55 @@ class _TransactionList extends StatelessWidget {
             iconColor = Bolt21Theme.orange;
           }
 
-          return ListTile(
-            onTap: () => _showPaymentDetails(context, payment),
-            leading: CircleAvatar(
-              backgroundColor: iconColor.withValues(alpha: 0.1),
-              child: Icon(icon, color: iconColor, size: 20),
-            ),
-            title: Text(
-              '${isReceive ? '+' : '-'}${_formatAmount(amount)}',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: isReceive ? Bolt21Theme.success : Bolt21Theme.textPrimary,
+          // Build accessibility label for screen readers
+          String semanticLabel;
+          if (isFailed) {
+            semanticLabel = 'Failed ${isReceive ? "incoming" : "outgoing"} payment of ${_formatAmount(amount)}, $timeAgo';
+          } else if (isPending) {
+            semanticLabel = 'Pending ${isReceive ? "incoming" : "outgoing"} payment of ${_formatAmount(amount)}, $timeAgo';
+          } else {
+            semanticLabel = '${isReceive ? "Received" : "Sent"} ${_formatAmount(amount)}, $timeAgo';
+          }
+
+          return Semantics(
+            label: semanticLabel,
+            button: true,
+            child: ListTile(
+              onTap: () => _showPaymentDetails(context, payment),
+              leading: CircleAvatar(
+                backgroundColor: iconColor.withValues(alpha: 0.1),
+                child: Icon(icon, color: iconColor, size: 20),
               ),
-            ),
-            subtitle: Text(
-              isPending ? 'Pending • $timeAgo' : timeAgo,
-              style: const TextStyle(
-                color: Bolt21Theme.textSecondary,
-                fontSize: 12,
-              ),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isFailed)
-                  const Text(
-                    'Failed',
-                    style: TextStyle(color: Bolt21Theme.error, fontSize: 12),
-                  ),
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.chevron_right,
-                  color: Bolt21Theme.textSecondary.withValues(alpha: 0.5),
-                  size: 20,
+              title: Text(
+                '${isReceive ? '+' : '-'}${_formatAmount(amount)}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: isReceive ? Bolt21Theme.success : Bolt21Theme.textPrimary,
                 ),
-              ],
+              ),
+              subtitle: Text(
+                isPending ? 'Pending • $timeAgo' : timeAgo,
+                style: const TextStyle(
+                  color: Bolt21Theme.textSecondary,
+                  fontSize: 12,
+                ),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isFailed)
+                    const Text(
+                      'Failed',
+                      style: TextStyle(color: Bolt21Theme.error, fontSize: 12),
+                    ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Bolt21Theme.textSecondary.withValues(alpha: 0.5),
+                    size: 20,
+                  ),
+                ],
+              ),
             ),
           );
         },

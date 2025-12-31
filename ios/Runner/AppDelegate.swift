@@ -66,6 +66,52 @@ import os.log
             "jQJTbIh0grw0/1TkHSumWb+Fs0Ggogr621gT3PvPKG0=",
           ],
         ],
+        // Community Node (Let's Encrypt)
+        "community.bolt21.io": [
+          kTSKEnforcePinning: true,
+          kTSKIncludeSubdomains: true,
+          kTSKExpirationDate: "2026-12-31",
+          kTSKPublicKeyHashes: [
+            "C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=",
+            "diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=",
+            "J2/oqMTsdhFWW/n85tys6b4yDBtb6idZayIEBx7QTxA=",
+            "jQJTbIh0grw0/1TkHSumWb+Fs0Ggogr621gT3PvPKG0=",
+          ],
+        ],
+        // GitHub (app updates) - DigiCert CA chain
+        "raw.githubusercontent.com": [
+          kTSKEnforcePinning: true,
+          kTSKIncludeSubdomains: true,
+          kTSKExpirationDate: "2026-12-31",
+          kTSKPublicKeyHashes: [
+            "r/mIkJVsUSitA1b1FtRGF+vJlczCzKPct4TGaFOCmJk=",
+            "i7WTqTvh0OioIruIfFR4kMPnBqrS2rdiVPl/s2uC/CY=",
+            "WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=",
+            "RQeZkB42znUfsDIIFWIRiYEcKl7nHwNFwWCrnMMJhPw=",
+          ],
+        ],
+        "api.github.com": [
+          kTSKEnforcePinning: true,
+          kTSKIncludeSubdomains: true,
+          kTSKExpirationDate: "2026-12-31",
+          kTSKPublicKeyHashes: [
+            "r/mIkJVsUSitA1b1FtRGF+vJlczCzKPct4TGaFOCmJk=",
+            "i7WTqTvh0OioIruIfFR4kMPnBqrS2rdiVPl/s2uC/CY=",
+            "WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=",
+            "RQeZkB42znUfsDIIFWIRiYEcKl7nHwNFwWCrnMMJhPw=",
+          ],
+        ],
+        "github.com": [
+          kTSKEnforcePinning: true,
+          kTSKIncludeSubdomains: true,
+          kTSKExpirationDate: "2026-12-31",
+          kTSKPublicKeyHashes: [
+            "r/mIkJVsUSitA1b1FtRGF+vJlczCzKPct4TGaFOCmJk=",
+            "i7WTqTvh0OioIruIfFR4kMPnBqrS2rdiVPl/s2uC/CY=",
+            "WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=",
+            "RQeZkB42znUfsDIIFWIRiYEcKl7nHwNFwWCrnMMJhPw=",
+          ],
+        ],
       ]
     ]
 
