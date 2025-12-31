@@ -1,6 +1,7 @@
 {{/* Bolt21 Footer */}}
-<div class="container footer-container">
-  <div class="footer-grid">
+<div class="container footer-container" style="padding-left: 25px; padding-right: 25px;">
+  {{/* Main footer content */}}
+  <div class="footer-main">
     {{/* Logo and tagline */}}
     <div class="footer-brand">
       <a href="/" class="footer-logo">
@@ -10,35 +11,37 @@
       <p class="footer-tagline">{{ .Site.Params.tagline | default "Your keys. Your sats. Instant payments." }}</p>
     </div>
 
-    {{/* Product Links */}}
-    <div class="footer-links">
-      <h5>Product</h5>
-      <ul>
-        <li><a href="/features">Features</a></li>
-        <li><a href="/#download">Download</a></li>
-        <li><a href="/docs/">Docs</a></li>
-        <li><a href="/blog/">Blog</a></li>
-      </ul>
-    </div>
+    {{/* Two-column links: Product & Company */}}
+    <div class="footer-links-row">
+      {{/* Product Links */}}
+      <div class="footer-links">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="/features">Features</a></li>
+          <li><a href="/#download">Download</a></li>
+          <li><a href="/docs/">Docs</a></li>
+          <li><a href="/blog/">Blog</a></li>
+        </ul>
+      </div>
 
-    {{/* Company Links */}}
-    <div class="footer-links">
-      <h5>Company</h5>
-      <ul>
-        <li><a href="/about">About</a></li>
-        <li><a href="https://github.com/CaliforniaHodl/Bolt21" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="https://twitter.com/bolt21app" target="_blank" rel="noopener">Twitter</a></li>
-      </ul>
+      {{/* Company Links */}}
+      <div class="footer-links">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/support/contact-us">Contact</a></li>
+          <li><a href="https://github.com/CaliforniaHodl/Bolt21" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://twitter.com/bolt21app" target="_blank" rel="noopener">Twitter</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
 
-    {{/* Legal Links */}}
-    <div class="footer-links">
-      <h5>Legal</h5>
-      <ul>
-        <li><a href="/privacy-policy">Privacy Policy</a></li>
-        <li><a href="/terms-of-use">Terms of Use</a></li>
-      </ul>
-    </div>
+  {{/* Legal Links - Below */}}
+  <div class="footer-legal">
+    <a href="/privacy-policy">Privacy Policy</a>
+    <span class="footer-legal-divider">·</span>
+    <a href="/terms-of-use">Terms of Use</a>
   </div>
 
   {{/* Copyright */}}
@@ -46,3 +49,64 @@
     <p>&copy; {{ now.Year }} Bolt21. Open source software.</p>
   </div>
 </div>
+
+<style>
+.footer-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-links-row {
+  display: flex;
+  gap: 60px;
+}
+
+.footer-legal {
+  padding: 20px 0;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-legal a {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.footer-legal a:hover {
+  color: #F7931A;
+}
+
+.footer-legal-divider {
+  color: #4b5563;
+  margin: 0 12px;
+}
+
+@media (max-width: 768px) {
+  .footer-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-brand {
+    margin-bottom: 20px;
+  }
+
+  .footer-links-row {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-links-row {
+    flex-direction: column;
+    gap: 30px;
+  }
+}
+</style>
