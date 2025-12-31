@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   {{ range sort .Data.Pages ".Params.priority" "desc" }}
-    {{ if and (not .Params.private) (ge .Params.priority 0.1) }}
+    {{ if not .Params.private }}
       <url>
         <loc>{{ .Permalink }}</loc>
 

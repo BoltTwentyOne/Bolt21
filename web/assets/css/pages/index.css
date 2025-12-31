@@ -87,9 +87,11 @@
 .btn-primary {
   background: #F7931A;
   color: white;
+  border: 1px solid #F7931A;
 }
 .btn-primary:hover {
   background: #e8850f;
+  border-color: #e8850f;
   transform: translateY(-2px);
 }
 .btn-secondary {

@@ -1,49 +1,47 @@
 {{/* Bolt21 Footer */}}
 <div class="container footer-container" style="padding-left: 25px; padding-right: 25px;">
-  {{/* Main footer content */}}
+  {{/* Main footer content - 4 column layout */}}
   <div class="footer-main">
-    {{/* Logo and tagline */}}
-    <div class="footer-brand">
+    {{/* Column 1: Logo and tagline */}}
+    <div class="footer-col footer-brand">
       <a href="/" class="footer-logo">
-        <img src="/images/logo.png" alt="Bolt21" />
+        <img src="/images/logo.png" alt="Bolt21" width="652" height="377" />
         <span class="sr-only">Bolt21</span>
       </a>
-      <p class="footer-tagline">{{ .Site.Params.tagline | default "Your keys. Your sats. Near-near-instant payments." }}</p>
+      <p class="footer-tagline">{{ .Site.Params.tagline | default "Your keys. Your sats. Near-instant payments." }}</p>
     </div>
 
-    {{/* Two-column links: Product & Company */}}
-    <div class="footer-links-row">
-      {{/* Product Links */}}
-      <div class="footer-links">
-        <h5>Product</h5>
-        <ul>
-          <li><a href="/features">Features</a></li>
-          <li><a href="/#download">Download</a></li>
-          <li><a href="/docs/">Docs</a></li>
-          <li><a href="/blog/">Blog</a></li>
-        </ul>
-      </div>
-
-      {{/* Company Links */}}
-      <div class="footer-links">
-        <h5>Company</h5>
-        <ul>
-          <li><a href="/about">About</a></li>
-          <li><a href="/support/contact-us">Contact</a></li>
-          <li><a href="https://github.com/CaliforniaHodl/Bolt21" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://twitter.com/bolt21app" target="_blank" rel="noopener">Twitter</a></li>
-        </ul>
-      </div>
+    {{/* Column 2: Product Links */}}
+    <div class="footer-col footer-links">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="/features">Features</a></li>
+        <li><a href="/#download">Download</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
     </div>
-  </div>
 
-  {{/* Legal Links - Below */}}
-  <div class="footer-legal">
-    <a href="/privacy-policy">Privacy Policy</a>
-    <span class="footer-legal-divider">·</span>
-    <a href="/terms-of-use">Terms of Use</a>
-    <span class="footer-legal-divider">·</span>
-    <a href="/accessibility">Accessibility</a>
+    {{/* Column 3: Company Links */}}
+    <div class="footer-col footer-links">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/support/contact-us">Contact</a></li>
+        <li><a href="https://github.com/CaliforniaHodl/Bolt21" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://twitter.com/bolt21app" target="_blank" rel="noopener">Twitter</a></li>
+      </ul>
+    </div>
+
+    {{/* Column 4: Legal Links */}}
+    <div class="footer-col footer-links">
+      <h5>Legal</h5>
+      <ul>
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/terms-of-use">Terms of Use</a></li>
+        <li><a href="/accessibility">Accessibility</a></li>
+      </ul>
+    </div>
   </div>
 
   {{/* Copyright */}}
@@ -54,60 +52,67 @@
 
 <style>
 .footer-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 40px;
   padding-bottom: 30px;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.footer-links-row {
-  display: flex;
-  gap: 60px;
+.footer-col {
+  min-width: 0;
 }
 
-.footer-legal {
-  padding: 20px 0;
-  text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+.footer-brand {
+  padding-right: 20px;
 }
 
-.footer-legal a {
+.footer-links h5 {
+  margin-bottom: 1rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
   color: #9ca3af;
   text-decoration: none;
   font-size: 0.875rem;
   transition: color 0.2s;
 }
 
-.footer-legal a:hover {
+.footer-links a:hover {
   color: #F7931A;
-}
-
-.footer-legal-divider {
-  color: #4b5563;
-  margin: 0 12px;
 }
 
 @media (max-width: 768px) {
   .footer-main {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
     text-align: center;
+    gap: 30px;
   }
 
   .footer-brand {
-    margin-bottom: 20px;
-  }
-
-  .footer-links-row {
-    gap: 40px;
+    padding-right: 0;
   }
 }
 
-@media (max-width: 480px) {
-  .footer-links-row {
-    gap: 55px;
+@media (min-width: 480px) and (max-width: 768px) {
+  .footer-main {
+    grid-template-columns: repeat(2, 1fr);
+    text-align: left;
+  }
+
+  .footer-brand {
+    grid-column: span 2;
+    text-align: center;
   }
 }
 </style>

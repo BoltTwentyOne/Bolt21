@@ -629,17 +629,17 @@ video {
     cursor: not-allowed;
   }
 .btn-primary {
-    background-color: #0d6efd;
+    background-color: #F7931A;
     color: white;
-    border: 1px solid #0d6efd;
+    border: 1px solid #F7931A;
   }
 .btn-primary:hover:not(:disabled) {
-    background-color: rgb(1.762295082, 87.2336065574, 213.237704918);
-    border-color: rgb(1.762295082, 87.2336065574, 213.237704918);
+    background-color: #e5850f;
+    border-color: #e5850f;
   }
 .btn-primary:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.4);
+    box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.4);
   }
 .btn-secondary {
     display: inline-flex;
