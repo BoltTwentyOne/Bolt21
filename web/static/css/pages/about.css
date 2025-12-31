@@ -187,6 +187,35 @@
   background: #e8850f;
 }
 
+.donate .channel-cta {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.donate .channel-cta p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+.donate .node-uri {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+.donate .node-uri code {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.6);
+  word-break: break-all;
+  text-align: left;
+}
+
 .contact {
   padding: 4rem 0;
   color: white;
