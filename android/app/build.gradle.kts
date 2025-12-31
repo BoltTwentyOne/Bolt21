@@ -51,12 +51,30 @@ android {
 
     buildTypes {
         release {
+            // PERFORMANCE: Enable minification and resource shrinking
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
             signingConfig = if (keystorePropertiesFile.exists()) {
                 signingConfigs.getByName("release")
             } else {
                 // Fallback to debug signing for development
                 signingConfigs.getByName("debug")
             }
+        }
+    }
+
+    // Split APKs by ABI for smaller download sizes
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86_64")
+            isUniversalApk = false
         }
     }
 }

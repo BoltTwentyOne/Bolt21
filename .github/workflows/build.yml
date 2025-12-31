@@ -31,12 +31,17 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Analyze code
+        run: flutter analyze --no-fatal-infos
+
       - name: Run tests
         run: flutter test
 
-      - name: Build APK
+      - name: Build optimized APK
         run: |
           flutter build apk --release \
+            --obfuscate \
+            --split-debug-info=build/debug-info \
             --dart-define=BREEZ_API_KEY="${{ secrets.BREEZ_API_KEY }}"
 
       - name: Get version
