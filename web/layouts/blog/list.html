@@ -14,17 +14,29 @@
     {{/* Blog posts grid */}}
     <div class="max-w-5xl mx-auto">
       {{ $pages := .RegularPages }}
-      {{ if gt (len $pages) 0 }}
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {{ range $pages }}
-        <article class="group bg-dark/30 rounded-xl overflow-hidden hover:bg-dark/50 transition-all hover:shadow-xl hover:shadow-primary/5">
-          <a href="{{ .RelPermalink }}" class="block">
+      {{ $totalPosts := len $pages }}
+      {{ if gt $totalPosts 0 }}
+      <div id="blog-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {{ range $index, $page := $pages }}
+        {{/* First 9 posts: visible immediately */}}
+        {{/* Posts 10-20: hidden, loaded via JS */}}
+        {{/* Posts 21+: server-side pagination */}}
+        {{ $isInitial := lt $index 9 }}
+        {{ $isLazyLoad := and (ge $index 9) (lt $index 20) }}
+        {{ $isPaginated := ge $index 20 }}
+
+        {{ if not $isPaginated }}
+        <article
+          class="blog-card group bg-dark/30 rounded-xl overflow-hidden hover:bg-dark/50 transition-all hover:shadow-xl hover:shadow-primary/5 {{ if $isLazyLoad }}lazy-post hidden{{ end }}"
+          {{ if $isLazyLoad }}data-lazy-index="{{ $index }}"{{ end }}
+        >
+          <a href="{{ $page.RelPermalink }}" class="block">
             {{/* Featured image */}}
-            {{ if .Params.image }}
+            {{ if $page.Params.image }}
             <div class="aspect-video overflow-hidden">
               <img
-                src="{{ .Params.image }}"
-                alt="{{ .Title }}"
+                src="{{ $page.Params.image }}"
+                alt="{{ $page.Title }}"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
               />
@@ -39,9 +51,9 @@
 
             <div class="p-6">
               {{/* Tags */}}
-              {{ if .Params.tags }}
+              {{ if $page.Params.tags }}
               <div class="flex flex-wrap gap-2 mb-3">
-                {{ range first 2 .Params.tags }}
+                {{ range first 2 $page.Params.tags }}
                 <span class="px-2 py-0.5 bg-primary/20 text-primary rounded text-xs">
                   {{ . }}
                 </span>
@@ -51,50 +63,51 @@
 
               {{/* Title */}}
               <h2 class="text-lg font-semibold text-white group-hover:text-primary transition-colors mb-2 line-clamp-2">
-                {{ .Title }}
+                {{ $page.Title }}
               </h2>
 
               {{/* Description */}}
               <p class="text-gray-400 text-sm line-clamp-2 mb-4">
-                {{ .Description | default .Summary | truncate 120 }}
+                {{ $page.Description | default $page.Summary | truncate 120 }}
               </p>
 
               {{/* Meta */}}
               <div class="flex items-center justify-between text-sm text-gray-500">
-                <time datetime="{{ .Date.Format "2006-01-02" }}">
-                  {{ .Date.Format "Jan 2, 2006" }}
+                <time datetime="{{ $page.Date.Format "2006-01-02" }}">
+                  {{ $page.Date.Format "Jan 2, 2006" }}
                 </time>
-                <span>{{ math.Round (div (countwords .Content) 200.0) }} min read</span>
+                <span>{{ math.Round (div (countwords $page.Content) 200.0) }} min read</span>
               </div>
             </div>
           </a>
         </article>
         {{ end }}
+        {{ end }}
       </div>
 
-      {{/* Pagination */}}
-      {{ if .Paginator }}
-      {{ if gt .Paginator.TotalPages 1 }}
-      <nav class="mt-16 flex justify-center gap-2">
-        {{ if .Paginator.HasPrev }}
-        <a href="{{ .Paginator.Prev.URL }}" class="px-4 py-2 bg-dark/50 text-white rounded-lg hover:bg-primary transition-colors">
-          Previous
-        </a>
-        {{ end }}
-
-        {{ range .Paginator.Pagers }}
-        <a href="{{ .URL }}" class="px-4 py-2 rounded-lg {{ if eq . $.Paginator }}bg-primary text-white{{ else }}bg-dark/50 text-gray-400 hover:bg-dark/70{{ end }} transition-colors">
-          {{ .PageNumber }}
-        </a>
-        {{ end }}
-
-        {{ if .Paginator.HasNext }}
-        <a href="{{ .Paginator.Next.URL }}" class="px-4 py-2 bg-dark/50 text-white rounded-lg hover:bg-primary transition-colors">
-          Next
-        </a>
-        {{ end }}
-      </nav>
+      {{/* Load More Button - shown when there are lazy posts */}}
+      {{ if gt $totalPosts 9 }}
+      <div id="load-more-container" class="mt-12 text-center {{ if le $totalPosts 9 }}hidden{{ end }}">
+        <button
+          id="load-more-btn"
+          class="px-8 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          Load More Articles
+        </button>
+        <p id="posts-count" class="text-gray-500 text-sm mt-3">
+          Showing <span id="visible-count">9</span> of {{ if gt $totalPosts 20 }}20{{ else }}{{ $totalPosts }}{{ end }} articles
+        </p>
+      </div>
       {{ end }}
+
+      {{/* Pagination - only shown after 20 posts */}}
+      {{ if gt $totalPosts 20 }}
+      <nav id="pagination" class="mt-16 hidden flex-wrap justify-center gap-2">
+        <span class="text-gray-400 mr-4">More articles available</span>
+        <a href="/blog/page/2/" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+          View All Articles
+        </a>
+      </nav>
       {{ end }}
 
       {{ else }}
@@ -109,6 +122,75 @@
     </div>
   </div>
 </section>
+
+{{/* Lazy Load Script */}}
+{{ if gt (len .RegularPages) 9 }}
+<script>
+(function() {
+  const lazyPosts = document.querySelectorAll('.lazy-post');
+  const loadMoreBtn = document.getElementById('load-more-btn');
+  const loadMoreContainer = document.getElementById('load-more-container');
+  const visibleCountEl = document.getElementById('visible-count');
+  const pagination = document.getElementById('pagination');
+
+  let loadedCount = 0;
+  const batchSize = 3;
+  const totalLazy = lazyPosts.length;
+
+  function loadMorePosts() {
+    const toLoad = Math.min(batchSize, totalLazy - loadedCount);
+
+    for (let i = 0; i < toLoad; i++) {
+      if (loadedCount < totalLazy) {
+        const post = lazyPosts[loadedCount];
+        post.classList.remove('hidden');
+        post.style.opacity = '0';
+        post.style.transform = 'translateY(20px)';
+
+        // Trigger reflow for animation
+        post.offsetHeight;
+
+        post.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        post.style.opacity = '1';
+        post.style.transform = 'translateY(0)';
+
+        loadedCount++;
+      }
+    }
+
+    // Update count
+    if (visibleCountEl) {
+      visibleCountEl.textContent = 9 + loadedCount;
+    }
+
+    // Hide button when all lazy posts loaded
+    if (loadedCount >= totalLazy) {
+      if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
+      if (pagination) pagination.classList.remove('hidden');
+      if (pagination) pagination.classList.add('flex');
+    }
+  }
+
+  // Load more on button click
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', loadMorePosts);
+  }
+
+  // Intersection Observer for auto-load on scroll
+  if ('IntersectionObserver' in window && loadMoreContainer) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && loadedCount < totalLazy) {
+          loadMorePosts();
+        }
+      });
+    }, { rootMargin: '200px' });
+
+    observer.observe(loadMoreContainer);
+  }
+})();
+</script>
+{{ end }}
 
 {{/* Newsletter CTA */}}
 <section class="py-16 bg-dark/50">
