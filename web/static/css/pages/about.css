@@ -122,6 +122,71 @@
   margin-bottom: 2rem;
 }
 
+.donate {
+  padding: 4rem 0;
+  color: white;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.donate .section-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: white;
+}
+.donate .donate-content {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+.donate .donate-message {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+}
+.donate .donate-qr {
+  background: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+.donate .donate-qr img {
+  display: block;
+}
+.donate .donate-offer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+.donate .donate-offer code {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  word-break: break-all;
+  text-align: left;
+  max-height: 60px;
+  overflow: hidden;
+}
+.donate .copy-btn {
+  background: #F7931A;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+.donate .copy-btn:hover {
+  background: #e8850f;
+}
+
 .contact {
   padding: 4rem 0;
   color: white;
