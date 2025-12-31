@@ -8,7 +8,7 @@ class Bolt21Theme {
   static const Color darkCard = Color(0xFF161B22);
   static const Color darkBorder = Color(0xFF30363D);
   static const Color textPrimary = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFF8B949E);
+  static const Color textSecondary = Color(0xFFA8B1BA); // WCAG AA compliant (4.5:1)
   static const Color success = Color(0xFF3FB950);
   static const Color error = Color(0xFFF85149);
 

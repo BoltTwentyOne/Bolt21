@@ -71,7 +71,7 @@ android {
     // Split APKs by ABI for smaller download sizes
     splits {
         abi {
-            isEnable = true
+            isEnabled = true
             reset()
             include("armeabi-v7a", "arm64-v8a", "x86_64")
             isUniversalApk = false
