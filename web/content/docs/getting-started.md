@@ -12,7 +12,7 @@ Welcome to Bolt21! This guide will help you set up your self-custodial Lightning
 
 ## Download the App
 
-1. Download Bolt21 from the [App Store](#) or [Google Play](#)
+1. Download Bolt21 from [Google Play](#) (iOS coming soon)
 2. Open the app and tap "Create New Wallet"
 
 ## Create Your Wallet

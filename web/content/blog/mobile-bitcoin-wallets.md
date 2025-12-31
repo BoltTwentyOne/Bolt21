@@ -43,7 +43,7 @@ Before diving into specific wallets, let's establish evaluation criteria:
 
 ### 1. Bolt21 - Best for Lightning + BOLT12
 
-**Platforms**: iOS, Android (coming soon)
+**Platforms**: Android (iOS coming soon)
 
 **The Focus**: Self-custodial Lightning wallet optimized for mining payouts and everyday payments.
 

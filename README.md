@@ -97,7 +97,7 @@ We welcome contributions! Please follow these guidelines:
 
 ### Security
 
-If you discover a security vulnerability, please email security@bolt21.io instead of opening a public issue.
+If you discover a security vulnerability, please email support@bolt21.io instead of opening a public issue.
 
 Security audit reports are published in `/docs/security/`.
 

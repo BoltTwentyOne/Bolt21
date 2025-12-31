@@ -61,7 +61,7 @@ import os.log
 **File Size:** 2,421 bytes
 
 **Contents Verified:**
-- ✅ Vulnerability reporting email: security@bolt21.app
+- ✅ Vulnerability reporting email: support@bolt21.io
 - ✅ Response SLA: 48 hours
 - ✅ Responsible disclosure policy
 - ✅ Security measures documentation

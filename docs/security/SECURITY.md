@@ -10,7 +10,7 @@
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, please report them via email to: security@bolt21.app
+Instead, please report them via email to: support@bolt21.io
 
 Please include the following information:
 - Type of issue (e.g., buffer overflow, SQL injection, cross-site scripting, etc.)
