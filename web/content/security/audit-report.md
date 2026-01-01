@@ -9,7 +9,7 @@ priority: 0.6
 # Security Audit Report
 
 **Date**: December 2024
-**Grade**: A-
+**Grade**: A
 **Status**: All critical issues resolved
 
 ## Executive Summary
@@ -20,12 +20,12 @@ Bolt21 underwent a comprehensive security audit covering mobile application secu
 
 | Area | Coverage |
 |------|----------|
-| Mobile App (Flutter) | Full review |
-| iOS Native (Swift) | Full review |
-| Android Native (Kotlin) | Full review |
-| Network Security | Full review |
-| Cryptography | Full review |
-| Authentication | Full review |
+| Mobile App (Flutter) | ✅ Full review |
+| iOS Native (Swift) | ✅ Full review |
+| Android Native (Kotlin) | ✅ Full review |
+| Network Security | ✅ Full review |
+| Cryptography | ✅ Full review |
+| Authentication | ✅ Full review |
 
 ## Findings Summary
 
@@ -37,6 +37,8 @@ Bolt21 underwent a comprehensive security audit covering mobile application secu
 | P0 | Certificate pinning for GitHub (updates) | ✅ Fixed |
 | P1 | Biometric bypass via split payments | ✅ Fixed |
 | P1 | TrustKit version pinning | ✅ Fixed |
+| P2 | Time window reset bypass | ✅ Fixed |
+| P3 | Defense-in-depth validation | ✅ Fixed |
 
 ### Intentional Exceptions
 
@@ -83,9 +85,10 @@ The audit identified several strong security practices:
 **Risk**: Attacker could drain wallet by sending multiple payments under 100k sat threshold
 
 **Remediation**: Implemented `PaymentTrackerService` with:
-- 5-minute rolling window for payment tracking
-- Cumulative threshold detection
-- Biometric required when cumulative amount exceeds 100k sats
+- 5-minute rolling window for payment tracking (100k sats)
+- 24-hour daily cumulative limit (500k sats)
+- Dual-layer protection prevents time-based bypass attacks
+- Biometric required when cumulative amount exceeds thresholds
 
 **Files Changed**:
 - `lib/services/payment_tracker_service.dart` (new)
@@ -95,9 +98,9 @@ The audit identified several strong security practices:
 
 | Metric | Value |
 |--------|-------|
-| Total Tests | 456 |
+| Total Tests | 752 |
 | Pass Rate | 100% |
-| Test Categories | Unit, Widget, Integration |
+| Test Categories | Unit, Widget, Integration, Security |
 
 ## Recommendations
 
