@@ -115,8 +115,8 @@ The audit identified several strong security practices:
 
 All security implementations are open source and can be verified:
 
-- [GitHub Repository](https://github.com/CaliforniaHodl/Bolt21)
-- [Security Documentation](https://github.com/CaliforniaHodl/Bolt21/tree/main/docs/security)
+- [GitHub Repository](https://github.com/BoltTwentyOne/Bolt21)
+- [Security Documentation](https://github.com/BoltTwentyOne/Bolt21/tree/main/docs/security)
 
 ## Full Audit Reports
 
@@ -124,14 +124,14 @@ View our complete audit history on GitHub:
 
 | Report | Description |
 |--------|-------------|
-| [Executive Summary](https://github.com/CaliforniaHodl/Bolt21/blob/main/docs/security/summary-executive.md) | High-level security overview |
-| [Cryptographic Audit](https://github.com/CaliforniaHodl/Bolt21/blob/main/docs/security/audit-cryptographic-mr-blackkeys.md) | Full cryptographic review |
-| [Red Team Audit](https://github.com/CaliforniaHodl/Bolt21/blob/main/docs/security/audit-red-team.md) | Adversarial security testing |
-| [Network Assessment](https://github.com/CaliforniaHodl/Bolt21/blob/main/docs/security/assessment-network.md) | Network security analysis |
-| [Payment Audit](https://github.com/CaliforniaHodl/Bolt21/blob/main/docs/security/audit-payment.md) | Payment flow security |
+| [Executive Summary](https://github.com/BoltTwentyOne/Bolt21/blob/main/docs/security/summary-executive.md) | High-level security overview |
+| [Cryptographic Audit](https://github.com/BoltTwentyOne/Bolt21/blob/main/docs/security/audit-cryptographic-mr-blackkeys.md) | Full cryptographic review |
+| [Red Team Audit](https://github.com/BoltTwentyOne/Bolt21/blob/main/docs/security/audit-red-team.md) | Adversarial security testing |
+| [Network Assessment](https://github.com/BoltTwentyOne/Bolt21/blob/main/docs/security/assessment-network.md) | Network security analysis |
+| [Payment Audit](https://github.com/BoltTwentyOne/Bolt21/blob/main/docs/security/audit-payment.md) | Payment flow security |
 
 ---
 
-**Report vulnerabilities**: security@bolt21.io
+**Report vulnerabilities**: support@bolt21.io
 
-**Full audit history**: [GitHub Security Docs](https://github.com/CaliforniaHodl/Bolt21/tree/main/docs/security)
+**Full audit history**: [GitHub Security Docs](https://github.com/BoltTwentyOne/Bolt21/tree/main/docs/security)

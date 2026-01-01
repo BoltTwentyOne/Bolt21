@@ -23,7 +23,7 @@ A privacy-focused Lightning wallet for Android with BOLT12 support, built on the
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/CaliforniaHodl/Bolt21.git
+   git clone https://github.com/BoltTwentyOne/Bolt21.git
    cd Bolt21
    ```
 
@@ -109,7 +109,7 @@ Security audit reports are published in `/docs/security/`.
 ## Support
 
 - Email: support@bolt21.io
-- Issues: [GitHub Issues](https://github.com/CaliforniaHodl/Bolt21/issues)
+- Issues: [GitHub Issues](https://github.com/BoltTwentyOne/Bolt21/issues)
 
 ## License
 

@@ -76,4 +76,4 @@ Additional protections when your app is in the background:
 
 ---
 
-**Source code**: [Payment Tracker Service](https://github.com/CaliforniaHodl/Bolt21/blob/main/lib/services/payment_tracker_service.dart)
+**Source code**: [Payment Tracker Service](https://github.com/BoltTwentyOne/Bolt21/blob/main/lib/services/payment_tracker_service.dart)

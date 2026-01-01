@@ -58,9 +58,9 @@ Even if you're on a compromised network (public WiFi, corporate proxy, malicious
 ## Verification
 
 Our certificate pinning implementation is open source:
-- [Android Config](https://github.com/CaliforniaHodl/Bolt21/blob/main/android/app/src/main/res/xml/network_security_config.xml)
-- [iOS Implementation](https://github.com/CaliforniaHodl/Bolt21/blob/main/ios/Runner/AppDelegate.swift)
+- [Android Config](https://github.com/BoltTwentyOne/Bolt21/blob/main/android/app/src/main/res/xml/network_security_config.xml)
+- [iOS Implementation](https://github.com/BoltTwentyOne/Bolt21/blob/main/ios/Runner/AppDelegate.swift)
 
 ---
 
-**Security researchers**: If you find a way to bypass our pinning, please report to security@bolt21.io
+**Security researchers**: If you find a way to bypass our pinning, please report to support@bolt21.io

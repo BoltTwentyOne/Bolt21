@@ -35,22 +35,22 @@ You don't have to trust us - you can verify everything yourself.
 
 | Component | Repository |
 |-----------|------------|
-| Flutter App | [CaliforniaHodl/Bolt21](https://github.com/CaliforniaHodl/Bolt21) |
-| iOS Native Code | [ios/Runner](https://github.com/CaliforniaHodl/Bolt21/tree/main/ios/Runner) |
-| Android Native Code | [android/app](https://github.com/CaliforniaHodl/Bolt21/tree/main/android/app) |
-| Website | [web/](https://github.com/CaliforniaHodl/Bolt21/tree/main/web) |
-| Security Configs | [docs/security](https://github.com/CaliforniaHodl/Bolt21/tree/main/docs/security) |
+| Flutter App | [BoltTwentyOne/Bolt21](https://github.com/BoltTwentyOne/Bolt21) |
+| iOS Native Code | [ios/Runner](https://github.com/BoltTwentyOne/Bolt21/tree/main/ios/Runner) |
+| Android Native Code | [android/app](https://github.com/BoltTwentyOne/Bolt21/tree/main/android/app) |
+| Website | [web/](https://github.com/BoltTwentyOne/Bolt21/tree/main/web) |
+| Security Configs | [docs/security](https://github.com/BoltTwentyOne/Bolt21/tree/main/docs/security) |
 
 ## Key Security Files
 
 Review our security implementation directly:
 
-- **Certificate Pinning (Android)**: [`network_security_config.xml`](https://github.com/CaliforniaHodl/Bolt21/blob/main/android/app/src/main/res/xml/network_security_config.xml)
-- **Certificate Pinning (iOS)**: [`AppDelegate.swift`](https://github.com/CaliforniaHodl/Bolt21/blob/main/ios/Runner/AppDelegate.swift)
-- **Payment Tracking**: [`payment_tracker_service.dart`](https://github.com/CaliforniaHodl/Bolt21/blob/main/lib/services/payment_tracker_service.dart)
-- **Biometric Auth**: [`auth_service.dart`](https://github.com/CaliforniaHodl/Bolt21/blob/main/lib/services/auth_service.dart)
-- **Encryption**: [`encryption_helper.dart`](https://github.com/CaliforniaHodl/Bolt21/blob/main/lib/utils/encryption_helper.dart)
-- **Address Validation**: [`address_validator.dart`](https://github.com/CaliforniaHodl/Bolt21/blob/main/lib/utils/address_validator.dart)
+- **Certificate Pinning (Android)**: [`network_security_config.xml`](https://github.com/BoltTwentyOne/Bolt21/blob/main/android/app/src/main/res/xml/network_security_config.xml)
+- **Certificate Pinning (iOS)**: [`AppDelegate.swift`](https://github.com/BoltTwentyOne/Bolt21/blob/main/ios/Runner/AppDelegate.swift)
+- **Payment Tracking**: [`payment_tracker_service.dart`](https://github.com/BoltTwentyOne/Bolt21/blob/main/lib/services/payment_tracker_service.dart)
+- **Biometric Auth**: [`auth_service.dart`](https://github.com/BoltTwentyOne/Bolt21/blob/main/lib/services/auth_service.dart)
+- **Encryption**: [`encryption_helper.dart`](https://github.com/BoltTwentyOne/Bolt21/blob/main/lib/utils/encryption_helper.dart)
+- **Address Validation**: [`address_validator.dart`](https://github.com/BoltTwentyOne/Bolt21/blob/main/lib/utils/address_validator.dart)
 
 ## Build Verification
 
@@ -58,7 +58,7 @@ You can build Bolt21 from source:
 
 ```bash
 # Clone the repository
-git clone https://github.com/CaliforniaHodl/Bolt21.git
+git clone https://github.com/BoltTwentyOne/Bolt21.git
 cd Bolt21
 
 # Install dependencies
@@ -73,7 +73,7 @@ flutter build ios --release  # iOS
 
 We welcome security contributions:
 
-1. **Report Vulnerabilities**: security@bolt21.io
+1. **Report Vulnerabilities**: support@bolt21.io
 2. **Submit Fixes**: Pull requests welcome
 3. **Audit Code**: Review and document findings
 4. **Improve Docs**: Help others understand our security
@@ -88,4 +88,4 @@ Bolt21 is released under the MIT License, allowing you to:
 
 ---
 
-**GitHub**: [github.com/CaliforniaHodl/Bolt21](https://github.com/CaliforniaHodl/Bolt21)
+**GitHub**: [github.com/BoltTwentyOne/Bolt21](https://github.com/BoltTwentyOne/Bolt21)

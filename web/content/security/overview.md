@@ -23,7 +23,7 @@ We implement multiple overlapping security layers:
 - **Payment Security**: Cumulative tracking prevents split-payment attacks
 
 ### Transparency
-Every line of code is [open source on GitHub](https://github.com/CaliforniaHodl/Bolt21). Security comes from transparency, not obscurity.
+Every line of code is [open source on GitHub](https://github.com/BoltTwentyOne/Bolt21). Security comes from transparency, not obscurity.
 
 ## Security Features
 
@@ -46,4 +46,4 @@ Every line of code is [open source on GitHub](https://github.com/CaliforniaHodl/
 
 ---
 
-**Questions?** Contact security@bolt21.io
+**Questions?** Contact support@bolt21.io

@@ -20,8 +20,8 @@ Your Bitcoin security is our top priority. We employ multiple layers of protecti
 ## Security Audits
 
 - [Latest Audit Report](/security/audit-report) - Our most recent security assessment
-- [View on GitHub](https://github.com/CaliforniaHodl/Bolt21/tree/main/docs/security) - Full audit history and reports
+- [View on GitHub](https://github.com/BoltTwentyOne/Bolt21/tree/main/docs/security) - Full audit history and reports
 
 ---
 
-**Found a vulnerability?** Report responsibly to security@bolt21.io
+**Found a vulnerability?** Report responsibly to support@bolt21.io

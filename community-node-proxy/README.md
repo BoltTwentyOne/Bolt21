@@ -10,7 +10,7 @@ ssh admin@192.168.1.128
 
 # Clone or copy the proxy
 cd ~
-git clone https://github.com/CaliforniaHodl/Bolt21.git
+git clone https://github.com/BoltTwentyOne/Bolt21.git
 cd Bolt21/community-node-proxy
 
 # Run it

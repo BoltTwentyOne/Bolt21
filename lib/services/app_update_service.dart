@@ -13,9 +13,9 @@ import 'secure_storage_service.dart';
 /// Update the version.json file in the repo to trigger forced updates.
 class AppUpdateService {
   static const String _versionUrl =
-    'https://raw.githubusercontent.com/CaliforniaHodl/Bolt21/main/version.json';
+    'https://raw.githubusercontent.com/BoltTwentyOne/Bolt21/main/version.json';
   static const String _releasesUrl =
-    'https://api.github.com/repos/CaliforniaHodl/Bolt21/releases/latest';
+    'https://api.github.com/repos/BoltTwentyOne/Bolt21/releases/latest';
   static const String _dismissedVersionKey = 'bolt21_dismissed_update_version';
 
   /// Check if app update is required and show blocking dialog if so
@@ -116,7 +116,7 @@ class AppUpdateService {
   static Future<void> _openStore(VersionInfo info) async {
     // Try platform-specific store URL first, fallback to GitHub releases
     final url = info.storeUrl ??
-        'https://github.com/CaliforniaHodl/Bolt21/releases';
+        'https://github.com/BoltTwentyOne/Bolt21/releases';
 
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
@@ -185,7 +185,7 @@ class AppUpdateService {
           label: 'UPDATE',
           textColor: Colors.white,
           onPressed: () async {
-            final url = releaseUrl ?? 'https://github.com/CaliforniaHodl/Bolt21/releases/latest';
+            final url = releaseUrl ?? 'https://github.com/BoltTwentyOne/Bolt21/releases/latest';
             final uri = Uri.parse(url);
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri, mode: LaunchMode.externalApplication);
