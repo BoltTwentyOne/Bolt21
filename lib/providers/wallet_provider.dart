@@ -8,6 +8,7 @@ import '../services/lnd_service.dart';
 import '../services/notification_service.dart';
 import '../services/operation_state_service.dart';
 import '../services/secure_storage_service.dart';
+import '../utils/address_validator.dart';
 import '../utils/retry_helper.dart';
 import '../utils/secure_logger.dart';
 import '../utils/secure_string.dart';
@@ -841,6 +842,16 @@ class WalletProvider extends ChangeNotifier {
   Future<String?> sendPayment(String destination, {BigInt? amountSat}) async {
     if (!_isInitialized || _activeWallet == null) return null;
 
+    // SECURITY: Defense-in-depth - validate destination at wallet provider layer
+    // Prevents malicious/malformed destinations from reaching payment APIs
+    final validationError = AddressValidator.validateDestination(destination);
+    if (validationError != null) {
+      _error = 'Invalid destination: $validationError';
+      SecureLogger.warn('Invalid payment destination blocked', tag: 'Payment');
+      notifyListeners();
+      return null;
+    }
+
     // SECURITY: Atomic rate limiting - prevents TOCTOU race condition
     // Check and record in single locked operation to prevent bypass
     final isRateLimited = await _checkAndRecordPaymentAttempt();
@@ -922,6 +933,15 @@ class WalletProvider extends ChangeNotifier {
     BigInt? amountSat,
     String? idempotencyKey,
   }) async {
+    // SECURITY: Defense-in-depth - validate destination at wallet provider layer
+    final validationError = AddressValidator.validateDestination(destination);
+    if (validationError != null) {
+      _error = 'Invalid destination: $validationError';
+      SecureLogger.warn('Invalid payment destination blocked (idempotent)', tag: 'Payment');
+      notifyListeners();
+      return null;
+    }
+
     // Check if lock is already held (non-blocking check for UX)
     if (_sendLock.locked) {
       SecureLogger.warn('Payment blocked - another payment in progress', tag: 'Wallet');
