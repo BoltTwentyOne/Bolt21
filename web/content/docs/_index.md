@@ -1,6 +1,6 @@
 ---
 title: 'Documentation'
-description: 'Learn how to use Bolt21, set up your self-custodial wallet, receive Lightning payments, configure Ocean mining payouts, and master BOLT12 offers.'
+description: 'Learn how to use Bolt21, set up your self-custodial wallet, receive Lightning payments, and master BOLT12 offers.'
 layout: 'docs'
 css: ['docs.css']
 priority: 0.8
@@ -18,14 +18,13 @@ Everything you need to use your self-custodial Lightning wallet.
 
 ## Security
 
+- [Security Overview](/docs/security) - How Bolt21 protects your Bitcoin
 - [Biometric Authentication](/docs/biometrics) - Protect your wallet with Face ID or fingerprint
-- [Wallet Management](/docs/wallet-management) - Create, backup, and manage multiple wallets
 - [Recovery & Restore](/docs/recovery) - Recover your wallet on any device
 
-## Advanced
+## Wallet
 
-- [Community Node](/docs/community-node) - Lower fees through shared infrastructure
-- [Connect Your Node](/docs/connect-node) - Use your own LND Lightning node
+- [Wallet Management](/docs/wallet-management) - Create, backup, and manage multiple wallets
 
 ---
 

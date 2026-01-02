@@ -1,6 +1,6 @@
 🔐 BOLT21 SECURITY AUDIT
 ========================
-Project: /Users/jasonsutter/Documents/Companies/bolt21
+Project: bolt21
 Date: Thu Jan  1 16:32:50 PST 2026
 
 1. Checking for raw debugPrint() usage...
